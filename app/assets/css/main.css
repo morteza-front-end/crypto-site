@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+.bg-primary {
+  background-color: #fbdd2e !important;
+}
+.bg-secondary {
+  background-color: #e8e9e9 !important;
+}
+.data-\[state\=active\]\:text-primary {
+  &[data-state="active"] {
+    color: #131415;
+  }
+}
+.data-\[state\=inactive\]\:text-muted {
+  &[data-state="inactive"] {
+    color: #131415;
+  }
+}
