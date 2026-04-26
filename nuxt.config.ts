@@ -19,4 +19,10 @@ export default defineNuxtConfig({
     preference: 'light'
   },
   devtools: { enabled: true },
+  runtimeConfig: {
+    coinmarketcapApiKey: process.env.COINMARKETCAP_API_KEY || '',
+    public: {
+      enableWebSocket: process.env.ENABLE_WEBSOCKET !== 'false',
+    },
+  },
 })

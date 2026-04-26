@@ -5,7 +5,9 @@
       <div
         class="font-semibold text-base text-[#353535] flex items-start md:items-center flex-col w-1/2 md:w-fit"
       >
-        <span class="md:text-xl"> 2,334,894 </span>
+        <span class="md:text-xl">
+          {{ totalCryptos > 0 ? formatNumber(totalCryptos) : '2,334,894' }}
+        </span>
         <span class="font-normal text-sm md:text-base text-[#575C5E] mt-2"
           >registered users</span
         >
@@ -22,7 +24,9 @@
       <div
         class="font-semibold text-base text-[#353535] flex items-start md:items-center flex-col w-1/2 md:w-fit"
       >
-        <span class="md:text-xl"> +1,876 </span>
+        <span class="md:text-xl">
+          {{ activePairs > 0 ? formatNumber(activePairs) : '+1,876' }}
+        </span>
         <span class="font-normal text-sm md:text-base text-[#575C5E] mt-2"
           >24h Trading pairs</span
         >
@@ -30,7 +34,9 @@
       <div
         class="font-semibold text-base text-[#353535] flex items-end md:items-center flex-col w-1/2 md:w-fit"
       >
-        <span class="md:text-xl"> $10.67 Billion </span>
+        <span class="md:text-xl">
+          {{ totalVolume24h ? formatMarketCap(totalVolume24h) : '$10.67 Billion' }}
+        </span>
         <span class="font-normal text-sm md:text-base text-[#575C5E] mt-2"
           >24h Trading volume</span
         >
@@ -39,6 +45,13 @@
   </section>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { useGlobalMetrics } from '~/composables/useMarketData'
+import { formatNumber, formatMarketCap } from '~/utils/format'
 
-<style></style>
+const { data: globalData } = useGlobalMetrics()
+
+const totalCryptos = computed(() => globalData.value?.total_cryptocurrencies ?? 0)
+const activePairs = computed(() => globalData.value?.active_market_pairs ?? 0)
+const totalVolume24h = computed(() => globalData.value?.total_volume_24h?.USD ?? 0)
+</script>

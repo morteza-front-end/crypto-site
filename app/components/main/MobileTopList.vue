@@ -5,14 +5,20 @@
       :ui="{ trigger: 'px-3 py-1 text-sm font-medium data-[selected=true]:text-black data-[selected=true]:font-semibold' }">
 
       <template #losers>
-        <div class="flex flex-col gap-4 mt-3">
-          <UiMarketRow v-for="c in losers" :key="c.symbol" :coin="c" />
+        <div v-if="losers.length === 0 && isLoading" class="mt-3 text-center text-gray-400 text-sm">
+          Loading...
+        </div>
+        <div v-else class="flex flex-col gap-4 mt-3">
+          <UiMarketRow v-for="c in losers" :key="c.id" :coin="c" />
         </div>
       </template>
 
       <template #gainers>
-        <div class="flex flex-col gap-4 mt-3">
-          <UiMarketRow v-for="c in gainers" :key="c.symbol" :coin="c" />
+        <div v-if="gainers.length === 0 && isLoading" class="mt-3 text-center text-gray-400 text-sm">
+          Loading...
+        </div>
+        <div v-else class="flex flex-col gap-4 mt-3">
+          <UiMarketRow v-for="c in gainers" :key="c.id" :coin="c" />
         </div>
       </template>
 
@@ -21,21 +27,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { CoinTopDisplay } from '~/types/market'
+
+defineProps<{
+  gainers: CoinTopDisplay[]
+  losers: CoinTopDisplay[]
+  isLoading?: boolean
+}>()
+
 const tabs = [
   { label: "Top 3 Losers", slot: "losers" },
   { label: "Top 3 Gainers", slot: "gainers" }
-]
-
-const losers = [
-  { name: "BTC", full: "Bitcoin", icon: "btc", price: "$118,896.89", change: "-1.08%" },
-  { name: "ETH", full: "Ethereum", icon: "eth", price: "$4,896.89", change: "-2.87%" },
-  { name: "CAR", full: "Cardano", icon: "car", price: "$50.89", change: "-1.08%" }
-]
-
-const gainers = [
-  { name: "SOL", full: "Solana", icon: "sol", price: "$152.89", change: "+4.16%" },
-  { name: "BTC", full: "Bitcoin", icon: "btc", price: "$118,896.89", change: "+1.02%" },
-  { name: "ETH", full: "Ethereum", icon: "eth", price: "$4,896.89", change: "+0.86%" }
 ]
 </script>

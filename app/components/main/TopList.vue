@@ -4,15 +4,17 @@
       {{ title }}
     </h2>
 
-    <div class="flex flex-col gap-4">
+    <div v-if="list.length === 0 && isLoading" class="py-4 text-center text-gray-400 text-sm">
+      Loading...
+    </div>
+    <div v-else class="flex flex-col gap-4">
       <div
         v-for="coin in list"
-        :key="coin.symbol"
+        :key="coin.id"
         class="flex items-center justify-between"
       >
-        <!-- سمت چپ -->
         <div class="flex items-center gap-3">
-          <UIcon :name="`custom:${coin.icon}`" class="w-8 h-8 rounded-full" />
+          <img :src="coin.iconUrl" :alt="coin.symbol" class="w-8 h-8 rounded-full object-cover" />
           <div class="flex flex-col leading-tight">
             <span class="font-semibold text-gray-900 text-sm">
               {{ coin.name }}
@@ -23,16 +25,13 @@
           </div>
         </div>
 
-        <!-- قیمت + درصد -->
         <div class="flex flex-col items-end leading-tight">
           <span class="font-medium text-sm text-gray-900">
             {{ coin.price }}
           </span>
           <span
             class="text-xs font-medium"
-            :class="
-              coin.change.startsWith('-') ? 'text-red-500' : 'text-green-500'
-            "
+            :class="coin.changeRaw < 0 ? 'text-red-500' : 'text-green-500'"
           >
             {{ coin.change }}
           </span>
@@ -42,9 +41,12 @@
   </div>
 </template>
 
-<script setup>
-defineProps({
-  title: String,
-  list: Array,
-});
+<script setup lang="ts">
+import type { CoinTopDisplay } from '~/types/market'
+
+defineProps<{
+  title: string
+  list: CoinTopDisplay[]
+  isLoading?: boolean
+}>()
 </script>

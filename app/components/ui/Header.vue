@@ -41,49 +41,43 @@
         :ui="{ trigger: '' }"
         class="gap-1 w-full text-[#131415]"
       >
-        <template #futures="{ item }">
+        <template #futures>
           <div class="flex flex-col">
-            <div
-              v-for="(coin, index) in coins"
-              :key="index"
-              class="flex items-center justify-between"
-              :class="index === coins.length - 1 ? 'pt-3 pb-0' : 'py-3'"
-            >
-              <div class="flex items-center gap-3 w-42.5 md:w-35">
-                <UIcon
-                  :name="`custom:${coin.icon}`"
-                  class="w-6 h-6 rounded-full"
-                />
+            <div v-if="headerCoins.length === 0 && isLoading" class="py-6 text-center text-gray-400">
+              Loading...
+            </div>
+            <template v-else>
+              <div
+                v-for="(coin, index) in headerCoins"
+                :key="coin.id"
+                class="flex items-center justify-between"
+                :class="index === headerCoins.length - 1 ? 'pt-3 pb-0' : 'py-3'"
+              >
+                <div class="flex items-center gap-3 w-42.5 md:w-35">
+                  <img :src="coin.iconUrl" :alt="coin.symbol" class="w-6 h-6 rounded-full object-cover" />
+                  <div class="flex items-center gap-1 leading-tight">
+                    <span class="font-semibold text-sm text-gray-900">{{ coin.symbol }}</span>
+                    <span class="text-xs text-gray-500">{{ coin.name }}</span>
+                    <UIcon v-if="coin.hot" name="custom:hot" class="w-5 h-5" />
+                  </div>
+                </div>
 
-                <div class="flex items-center gap-1 leading-tight">
-                  <span class="font-semibold text-sm text-gray-900">{{
-                    coin.symbol
-                  }}</span>
-                  <span class="text-xs text-gray-500">{{ coin.name }}</span>
-
-                  <UIcon v-if="coin.hot" name="custom:hot" class="w-5 h-5" />
+                <div
+                  class="text-sm text-left md:text-right w-20.5 md:w-[7.47rem] font-semibold"
+                >
+                  {{ coin.price }}
+                </div>
+                <div
+                  class="text-sm font-semibold"
+                  :class="coin.changeRaw < 0 ? 'text-red-500' : 'text-green-500'"
+                >
+                  {{ coin.change }}
                 </div>
               </div>
-
-              <div
-                class="text-sm text-left md:text-right w-20.5 md:w-[7.47rem] font-semibold"
-              >
-                {{ coin.price }}
-              </div>
-              <div
-                class="text-sm font-semibold"
-                :class="
-                  coin.change.startsWith('-')
-                    ? 'text-red-500'
-                    : 'text-green-500'
-                "
-              >
-                {{ coin.change }}
-              </div>
-            </div>
+            </template>
           </div>
         </template>
-        <template #new="{ item }"> </template>
+        <template #new> </template>
       </UTabs>
       <div class="ml-4">
         <a
@@ -99,7 +93,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { TabsItem } from "@nuxt/ui";
+import type { TabsItem } from "@nuxt/ui"
+import { useCoinDisplayData } from '~/composables/useMarketData'
 
 const items = [
   {
@@ -110,48 +105,8 @@ const items = [
     label: "Newly added",
     slot: "new" as const,
   },
-] satisfies TabsItem[];
-const value = ref("");
-const coins = [
-  {
-    symbol: "BTC",
-    name: "Bitcoin",
-    icon: "btc",
-    price: "$118,896.89",
-    change: "-1.08%",
-    hot: true,
-  },
-  {
-    symbol: "ETH",
-    name: "Ethereum",
-    icon: "eth",
-    price: "$4,896.89",
-    change: "-2.87%",
-    hot: true,
-  },
-  {
-    symbol: "Car",
-    name: "Cardano",
-    icon: "car",
-    price: "$12,52.89",
-    change: "-0.18%",
-    hot: true,
-  },
-  {
-    symbol: "Sol",
-    name: "Solana",
-    icon: "sol",
-    price: "$1,52.89",
-    change: "+0.18%",
-    hot: false,
-  },
-  {
-    symbol: "ACA",
-    name: "Cardano",
-    icon: "aca",
-    price: "$0.89",
-    change: "+4.16%",
-    hot: false,
-  },
-];
+] satisfies TabsItem[]
+
+const value = ref("")
+const { isLoading, headerCoins } = useCoinDisplayData(5)
 </script>

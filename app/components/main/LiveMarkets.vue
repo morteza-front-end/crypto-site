@@ -12,11 +12,11 @@
           <UTabs :items="items" :ui="{ trigger: '' }" variant="link"
             class="px-4 py-2 text-sm md:text-xl md:font-semibold rounded-md">
             <template #volume>
-              <MainCoinList :coins="coins" />
+              <MainCoinList :coins="topVolumeCoins" :isLoading="isLoading" />
             </template>
 
             <template #hot>
-              <MainCoinList :coins="coinsHot" />
+              <MainCoinList :coins="hotCoins" :isLoading="isLoading" />
             </template>
           </UTabs>
           <a href="#" class="text-sm text-gray-500 hover:text-gray-700 absolute md:top-7 md:right-6 flex items-center">
@@ -24,154 +24,42 @@
             <UIcon name="custom:arrow-simple" class="w-4 h-4 mt-0.5" />
           </a>
         </div>
-        <MainMobileLiveMarket class="md:hidden" />
+        <MainMobileLiveMarket
+          class="md:hidden"
+          :coins="topVolumeCoins"
+          :isLoading="isLoading"
+        />
       </div>
 
       <div class="hidden md:block">
-        <MainTopList title="Top 3 Losers" :list="losers" />
-        <MainTopList title="Top 3 Gainers" :list="gainers" class="mt-5" />
+        <MainTopList title="Top 3 Losers" :list="topLosers" :isLoading="isLoading" />
+        <MainTopList title="Top 3 Gainers" :list="topGainers" :isLoading="isLoading" class="mt-5" />
       </div>
       <div>
-        <MainMobileTopList />
+        <MainMobileTopList
+          :gainers="topGainers"
+          :losers="topLosers"
+          :isLoading="isLoading"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { TabsItem } from "@nuxt/ui";
+import type { TabsItem } from "@nuxt/ui"
+import { useCoinDisplayData } from '~/composables/useMarketData'
 
 const items = [
   { label: "Top volume", slot: "volume" },
-  { label: "Hot Tokes", slot: "hot" },
-] satisfies TabsItem[];
+  { label: "Hot Tokens", slot: "hot" },
+] satisfies TabsItem[]
 
-const current = ref(items[0]);
-
-const coins = [
-  {
-    symbol: "BTC/USDT",
-    icon: "btc",
-    price: "$117,851.89",
-    volume: "23.98 M",
-    change: "+15.08%",
-    hot: true,
-  },
-  {
-    symbol: "ETH/USDT",
-    icon: "eth",
-    price: "$2,896.89",
-    volume: "23.98 M",
-    change: "+15.08%",
-    hot: true,
-  },
-  {
-    symbol: "CAR/USDT",
-    icon: "car",
-    price: "$12.89",
-    volume: "23.98 M",
-    change: "+15.08%",
-    hot: true,
-  },
-  {
-    symbol: "SOL/USDT",
-    icon: "sol",
-    price: "$12.89",
-    volume: "23.98 M",
-    change: "+15.08%",
-    hot: false,
-  },
-  {
-    symbol: "ACE/USDT",
-    icon: "aca",
-    price: "$12.89",
-    volume: "23.98 M",
-    change: "+15.08%",
-    hot: false,
-  },
-  {
-    symbol: "ACE/USDT",
-    icon: "aca",
-    price: "$12.89",
-    volume: "23.98 M",
-    change: "+15.08%",
-    hot: false,
-  },
-  {
-    symbol: "ACE/USDT",
-    icon: "aca",
-    price: "$12.89",
-    volume: "23.98 M",
-    change: "+15.08%",
-    hot: false,
-  },
-  {
-    symbol: "SOL/USDT",
-    icon: "sol",
-    price: "$12.89",
-    volume: "23.98 M",
-    change: "+15.08%",
-    hot: false,
-  },
-];
-
-const coinsHot = [
-  {
-    symbol: "ACE/USDT",
-    icon: "/coins/ace.png",
-    price: "$12.89",
-    volume: "23.98 M",
-    change: "+15.08%",
-  },
-];
-
-const losers = [
-  {
-    name: "Bitcoin",
-    symbol: "btc",
-    icon: "btc",
-    price: "$116,100.32",
-    change: "+1.23%",
-  },
-  {
-    name: "Ethereum",
-    symbol: "eth",
-    icon: "eth",
-    price: "$116,100.32",
-    change: "+1.23%",
-  },
-  {
-    name: "Solana",
-    symbol: "sol",
-    icon: "sol",
-    price: "$116,100.32",
-    change: "+1.23%",
-  },
-];
-
-const gainers = [
-  {
-    name: "Bitcoin",
-    symbol: "btc",
-    icon: "btc",
-    price: "$116,100.32",
-    change: "+1.23%",
-  },
-  {
-    name: "Ethereum",
-    symbol: "eth",
-    icon: "eth",
-    price: "$116,100.32",
-    change: "+0.92%",
-  },
-  {
-    name: "Solana",
-    symbol: "sol",
-    icon: "sol",
-    price: "$116,100.32",
-    change: "+0.55%",
-  },
-];
+const {
+  isLoading,
+  topVolumeCoins,
+  hotCoins,
+  topGainers,
+  topLosers,
+} = useCoinDisplayData(8)
 </script>
-
-<style></style>
